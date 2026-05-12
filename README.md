@@ -1,94 +1,178 @@
 # Data Warehouse and Analytics Project
 
-Welcome to the **Data Warehouse and Analytics Project** repository! 🚀  
-This project demonstrates a comprehensive data warehousing and analytics solution, from building a data warehouse to generating actionable insights. Designed as a portfolio project, it highlights industry best practices in data engineering and analytics.
+## Overview
 
----
-## 🏗️ Data Architecture
-
-The data architecture for this project follows Medallion Architecture **Bronze**, **Silver**, and **Gold** layers:
-
-![Data Architecture Diagram](docs/data_layers-1.png)
-![Data Architecture Diagram](docs/data_layers-2.png)
-
-
-1. **Bronze Layer**: Stores raw data as-is from the source systems. Data is ingested from CSV Files into SQL Server Database.
-![BRONZE LAYER](docs/data_flow.png)
-2. **Silver Layer**: This layer includes data cleansing, standardization, and normalization processes to prepare data for analysis.
-3. **Gold Layer**: Houses business-ready data modeled into a star schema required for reporting and analytics.
-
----
-## 📖 Project Overview
-
-This project involves:
-
-1. **Data Architecture**: Designing a Modern Data Warehouse Using Medallion Architecture **Bronze**, **Silver**, and **Gold** layers.
-2. **ETL Pipelines**: Extracting, transforming, and loading data from source systems into the warehouse.
-3. **Data Modeling**: Developing fact and dimension tables optimized for analytical queries.
-4. **Analytics & Reporting**: Creating SQL-based reports and dashboards for actionable insights.
-
-
-
+This repository contains a comprehensive **Modern Data Warehouse** solution built on the **Medallion Architecture** pattern. The project demonstrates industry best practices for data engineering, including ETL pipeline development, data integration, and analytical modeling using SQL Server.
 
 ---
 
-## 🚀 Project Requirements
+## 🏗️ Project Architecture
 
-### Building the Data Warehouse (Data Engineering)
+The solution implements a three-layer medallion architecture for progressive data transformation and quality improvement:
 
-#### Objective
-Develop a modern data warehouse using SQL Server to consolidate sales data, enabling analytical reporting and informed decision-making.
+### Architecture Layers
 
-#### Specifications
-- **Data Sources**: Import data from two source systems (ERP and CRM) provided as CSV files.
-- **Data Quality**: Cleanse and resolve data quality issues prior to analysis.
-- **Integration**: Combine both sources into a single, user-friendly data model designed for analytical queries.
-- **Scope**: Focus on the latest dataset only; historization of data is not required.
-- **Documentation**: Provide clear documentation of the data model to support both business stakeholders and analytics teams.
+![Data Architecture - Part 1](docs/data_layers-1.png)  
+![Data Architecture - Part 2](docs/data_layers-2.png)  
+![Data Flow Diagram](docs/data_architecture.png)
+
+#### **Bronze Layer** - Raw Data Ingestion
+- Stores raw, unprocessed data extracted directly from source systems
+- Minimal transformations; data is loaded as-is from CSV files
+- Source systems: ERP and CRM platforms
+- Tables created from source data without modification
+- Foundation for downstream transformation processes
+![Data Flow Diagram](docs/data_flow.png)
+
+#### **Silver Layer** - Data Cleansing & Standardization
+- Applies business rules and data quality standards
+- Performs data cleansing, validation, and deduplication
+- Normalizes data formats and resolves inconsistencies
+- Prepares trusted, quality-assured data for analysis
+- Intermediate layer for validated data operations
+![Data Flow Diagram](docs/data_integration.png)
+
+#### **Gold Layer** - Analytical Data Mart
+- Business-ready data modeled for analytics and reporting
+- Implements star schema design with fact and dimension tables
+- Optimized for BI tools and analytical queries
+- Supports decision-making and strategic insights
+- Final layer for end-user access and reporting
+![Data Flow Diagram](docs/data_model.png)
 
 ---
 
-### BI: Analytics & Reporting (Data Analysis)
+## 📋 Project Objectives
 
-#### Objective
-Develop SQL-based analytics to deliver detailed insights into:
-- **Customer Behavior**
-- **Product Performance**
-- **Sales Trends**
+### Data Engineering
+Develop a scalable, production-ready data warehouse that:
+- Integrates multiple data sources (ERP and CRM systems)
+- Ensures data quality through multi-layer validation
+- Consolidates disparate systems into a unified analytics platform
+- Maintains clear data lineage and governance
 
-These insights empower stakeholders with key business metrics, enabling strategic decision-making.  
+### Analytics & Business Intelligence
+Deliver actionable insights across:
+- **Customer Analytics**: Customer segmentation, behavior analysis, lifetime value
+- **Product Performance**: Sales by product, category trends, performance metrics
+- **Sales Intelligence**: Revenue trends, sales pipeline analysis, performance dashboards
 
-For more details, refer to [docs/requirements.md](docs/requirements.md).
+---
 
 ## 📂 Repository Structure
+
 ```
-data-warehouse-project/
+Data-warehouse-project/
 │
-├── datasets/                           # Raw source datasets (CSV files from ERP and CRM systems)
-│   ├── source_crm/                     # CRM data source files
-│   └── source_erp/                     # ERP data source files
+├── datasets/                           # Raw source datasets from source systems
+│   ├── source_crm/                     # CRM system exports (CSV format)
+│   │   ├── cust_info.csv               # Customer information
+│   │   ├── prd_info.csv                # Product information
+│   │   └── sales_details.csv           # Sales transactions
+│   │
+│   └── source_erp/                     # ERP system exports (CSV format)
+│       ├── CUST_AZ12.csv               # ERP customer data
+│       ├── LOC_A101.csv                # ERP location data
+│       └── PX_CAT_G1V2.csv             # ERP product category data
 │
-├── docs/                               # Project documentation and visual architecture details
-│   ├── data_layers-1.png               # Data architecture diagram (page 1)
-│   ├── data_layers-2.png               # Data architecture diagram (page 2)
-│   ├── data_layers-3.png               # Data architecture diagram (page 3)
-│   └── data_flow.png                   # Data flow diagram
+├── docs/                               # Project documentation and visual assets
+│   ├── data_layers-1.png               # Architecture diagram - Layers overview
+│   ├── data_layers-2.png               # Architecture diagram - Detailed flows
+│   ├── data_layers-3.png               # Architecture diagram - Data relationships
+│   ├── data_flow.png                   # ETL data flow diagram
+│  
 │
-├── common_scripts/                     # Shared SQL scripts (table creation, common utilities)
-│   └── Create_tables.sql               # SQL DDL script to create all bronze layer tables
+├── scripts/                            # SQL transformation and ETL scripts
+│   ├── bronze/                         # Bronze layer: Raw data load
+│   │   ├── Create_tables.sql           # DDL: Create all bronze staging tables
+│   │   └── Insert.sql                  # DML: Load CSV data into bronze tables
+│   │
+│   ├── silver/                         # Silver layer: Data cleansing & transformation
+│   │   ├── create.sql                  # DDL: Create silver layer tables
+│   │   └── insert.sql                  # DML: Transform and load cleansed data
+│   │
+│   └── gold/                           # Gold layer: Analytical data models
+│       └── gold.sql                    # DDL/DML: Create and populate analytical tables
 │
-├── scripts/                            # SQL ETL and transformation scripts organized by layer
-│   ├── bronze/                         # Bronze layer: Extract and load raw data from sources
-│   │   └── Insert.sql                  # Stored procedure: Load CSV data into bronze tables
-│   ├── silver/                         # Silver layer: Data cleansing, standardization, normalization
-│   └── gold/                           # Gold layer: Business-ready analytical data models
-│
-├── README.md                           # Project overview, architecture, and setup instructions
-├── LICENSE                             # License information for the repository
-└── .git/                               # Git version control directory
+├── backup.sql                          # Database backup and schema definition
+├── README.md                           # This file
+├── LICENSE                             # Repository license
+└── .git/                               # Version control history
+
 ```
+
 ---
 
-## ☕ Stay Connected
+## 🛠️ Technology Stack
+- **Database**: MS SQL Server
+- **Data Source Format**: CSV files
+- **ETL Approach**: SQL-based transformations
+- **Architecture Pattern**: Medallion Architecture (Bronze-Silver-Gold)
+- **Data Modeling**: Star schema design for analytical layer
+- **Version Control**: Git
 
-Let's stay in touch! Feel free to connect with me on likedIn profile: [LinkedIn](https://www.linkedin.com/in/rahulbt/)
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- SQL Server 2019 or later
+- SQL Server Management Studio (SSMS)
+- Access to source CSV datasets
+
+### Setup Instructions
+
+1. **Create Database Schema**
+   ```sql
+   -- Execute Create_tables.sql in the bronze layer
+   scripts/bronze/Create_tables.sql
+   ```
+
+2. **Load Bronze Layer Data**
+   ```sql
+   -- Execute Insert.sql to load raw data
+   scripts/bronze/Insert.sql
+   ```
+
+3. **Transform to Silver Layer**
+   ```sql
+   -- Execute silver layer scripts for cleansing and standardization
+   scripts/silver/create.sql
+   scripts/silver/insert.sql
+   ```
+
+4. **Build Gold Layer Analytics**
+   ```sql
+   -- Execute gold layer scripts for analytical models
+   scripts/gold/gold.sql
+   ```
+---
+
+## 📊 Data Sources
+
+### CRM System
+- **cust_info.csv**: Customer demographics and attributes
+- **prd_info.csv**: Product catalog and pricing information
+- **sales_details.csv**: Transaction-level sales data
+
+### ERP System
+- **CUST_AZ12.csv**: Enterprise customer master records
+- **LOC_A101.csv**: Location and region information
+- **PX_CAT_G1V2.csv**: Product category classifications
+
+---
+
+## 📝 Documentation
+
+Comprehensive documentation is available in the [docs/](docs/) directory, including:
+- Architecture diagrams and visual representations
+- Data flow diagrams showing ETL processes
+- Detailed data model documentation
+- Schema relationship diagrams
+
+---
+
+## 📧 Contact & LinkedIn
+For questions, feedback, or collaboration opportunities:  
+[LinkedIn Profile](https://www.linkedin.com/in/rahulbt/)
